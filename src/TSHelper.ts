@@ -135,6 +135,10 @@ export class TSHelper {
     }
 
     public static isArrayType(type: ts.Type, checker: ts.TypeChecker): boolean {
+        if (type.isUnion()) {
+            // assume to be array type if one of the elements is array type.
+            return type.types.some(t => this.isArrayType(t, checker));
+        }
         return this.forTypeOrAnySupertype(type, checker, t => this.isExplicitArrayType(t, checker));
     }
 
